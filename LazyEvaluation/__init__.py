@@ -31,5 +31,5 @@ from Promises import Promise, PromiseMetaClass, force
 from Futures import Future
 from ForkedFutures import ForkedFuture
 from LazyClasses import LazyEvaluated, LazyEvaluatedMetaClass
-from Functions import delay, lazy, spawn, future
+from Functions import delay, lazy, spawn, future, fork, forked_future
 

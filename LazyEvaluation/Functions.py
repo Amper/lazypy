@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from Promises import Promise
 from Futures import Future
+from ForkedFutures import ForkedFuture
 
 def delay(funk, args=None, kw=None, promiseclass=Promise):
 
@@ -73,6 +74,34 @@ def future(funk, futureclass=Future):
     evaluation off to the background. The class to be used for
     the future can be overridden. Every call to a future function will
     return a new future.
+    """
+
+    def future_funk(*args, **kw):
+        return futureclass(funk, args, kw)
+
+    return future_funk
+
+def fork(funk, args=None, kw=None, futureclass=ForkedFuture):
+
+    """
+    This is a parallel variant on the apply function. It returns a future
+    for the function call that will be evaluated in the background. You can
+    override the class to be used for the future. It uses forked futures
+    by default.
+    """
+
+    if args is None: args = []
+    if kw is None: kw = {}
+    return futureclass(funk, args, kw)
+
+def forked_future(funk, futureclass=ForkedFuture):
+
+    """
+    This function returns a future variant on the passed in function.
+    That future variant will not directly evaluate but will push that
+    evaluation off to the background. The class to be used for
+    the future can be overridden. Every call to a future function will
+    return a new future. It uses forked futures by default.
     """
 
     def future_funk(*args, **kw):

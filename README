@@ -178,3 +178,8 @@ and future is a decorator that turns any callable into a parallel version
 of itself. To use ForkedFutures, just pass the ForkedFuture class as the
 class to be used for the future in those calls.
 
+There is an additional pair of functions fork/forked_future that use those
+forked futures by default. Remember that they are all just syntactic
+sugar for the same concepts - you can use delay, spawn or fork interchangeably
+by passing the correct target class. Same goes for the decorators.
+

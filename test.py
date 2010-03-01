@@ -272,7 +272,7 @@ class TestCase500Futures(unittest.TestCase):
 class TestCase550ForkedFutures(unittest.TestCase):
 
     def testFastFuture(self):
-        f = spawn(lambda : 5+6, futureclass=ForkedFuture)
+        f = fork(lambda : 5+6)
         assert isinstance(f, ForkedFuture)
         assert f == 11
 
@@ -283,7 +283,7 @@ class TestCase550ForkedFutures(unittest.TestCase):
                 return 1
             return fib(n-1) + fib(n-2)
 
-        f = future(fib, futureclass=ForkedFuture)
+        f = forked_future(fib)
         assert f(5) == fib(5)
         assert f(10) == fib(10)
         assert f(20) == fib(20)
