@@ -283,7 +283,7 @@ class TestCase550ForkedFutures(unittest.TestCase):
                 return 1
             return fib(n-1) + fib(n-2)
 
-        f = forked_future(fib)
+        f = forked(fib)
         assert f(5) == fib(5)
         assert f(10) == fib(10)
         assert f(20) == fib(20)

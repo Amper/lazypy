@@ -94,7 +94,7 @@ def fork(funk, args=None, kw=None, futureclass=ForkedFuture):
     if kw is None: kw = {}
     return futureclass(funk, args, kw)
 
-def forked_future(funk, futureclass=ForkedFuture):
+def forked(funk, futureclass=ForkedFuture):
 
     """
     This function returns a future variant on the passed in function.
