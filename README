@@ -11,6 +11,9 @@ works with newer versions. For older versions you lose forked futures,
 since multiprocessing is part of Python starting with 2.6. But it might
 be possible to still make it work with versions as far back as Python 2.3.
 
+What is lazy evaluation or promises?
+--------------------------------------
+
 Regardless of what happens, a Promise should produce the same error message
 you would get without the Promise - just the code location should be
 different. This should be the case - but I can't guarantee it yet. If you
@@ -182,4 +185,41 @@ There is an additional pair of functions fork/forked that use those
 forked futures by default. Remember that they are all just syntactic
 sugar for the same concepts - you can use delay, spawn or fork interchangeably
 by passing the correct target class. Same goes for the decorators.
+
+So what to use - lazy, future or forked?
+-----------------------------------------
+
+Here is a very simple rundown on the three different variants on promises
+implemented in lazypy and when to use them:
+
+- delay/lazy is best used when you want to capture a state of computation
+  but not run it at the time of capturing, but instead decide later
+  when to actually compute it (or wether to not compute it at all). This
+  could be some lenghty computation that only will make sense later in
+  your code when you discover some special circumstances. You could get
+  very similar results with closures, delay and lazy are just more uniform
+  idioms for that.
+
+- spawn/future is best used when you have something that can run alongside
+  the main thread to compute some lengthy stuff. Since this uses threads
+  and since Python has the GIL, this is not really performance enhancing.
+  But it can be useful if your main thread mostly waits on stuff and the
+  computation can run in parallel to prepare the result that you later
+  need.
+
+- fork/forked is best used when you need to make use of multiple cores and
+  want some lengthy calculation run alongside the main process to prepare
+  a result you will need later. Since full processes are used, you can make
+  full use of your multiple cores to speed up some calculations that are
+  parallelizable.
+
+In general, all three promise variants could be replicated by using the
+underlying mechanisms directly (lazy evaluation can be simulated using
+closures, futures can be just implemented with the threading or the
+multiprocessing modules directly). lazypy only gives a nice syntactic
+wrapper around it and a way to add parallelism or lazy evaluation to
+code that is allready there - without the need of changing the consuming
+code. It can be especially useful if you work in a functional style
+with Python or if you want to annotate existing classes to get lazy or
+future semantics on some of it's methods.
 
