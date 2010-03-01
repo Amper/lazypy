@@ -55,9 +55,6 @@ class PromiseMetaClass(type):
     The __magicfunctions__ list defines methods that should be mimicked by
     using some predefined function.
     
-    __magicdelayedfunctions__ are functions that themselves produce a
-    promise instead forcing it's arguments to be evaluated.
-    
     The promise must define a __force__ method that will force evaluation
     of the promise.
     """
