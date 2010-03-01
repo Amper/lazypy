@@ -4,6 +4,9 @@ import unittest
 from LazyEvaluation import *
 from LazyEvaluation.Utils import NoneSoFar
 
+class MySpecialError(Exception):
+    pass
+
 def anton(a,b):
     return a+b
 
@@ -273,8 +276,16 @@ class TestCase550ForkedFutures(unittest.TestCase):
 
     def testFastFuture(self):
         f = fork(lambda : 5+6)
-        assert isinstance(f, ForkedFuture)
-        assert f == 11
+        self.assertTrue(isinstance(f, ForkedFuture))
+        self.assertEqual(f, 11)
+
+    def testFutureWithException(self):
+        def crasher():
+            raise MySpecialError(55)
+
+        f = fork(crasher)
+        self.assertTrue(isinstance(f, ForkedFuture))
+        self.assertRaises(MySpecialError, crasher)
 
     def testLongerFuture(self):
         
@@ -284,10 +295,8 @@ class TestCase550ForkedFutures(unittest.TestCase):
             return fib(n-1) + fib(n-2)
 
         f = forked(fib)
-        assert f(5) == fib(5)
-        assert f(10) == fib(10)
-        assert f(20) == fib(20)
-        assert f(30) == fib(30)
+        for n in (5, 10, 20, 30):
+            self.assertEqual(f(n), fib(n))
     
 class TestCase600LazyMethod(unittest.TestCase):
 
