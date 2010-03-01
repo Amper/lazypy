@@ -7,7 +7,7 @@ setup(
     author_email = "gb@rfc1437.de",
     url = "http://bitbucket.org/rfc1437/lazypy/",
     name='lazypy', 
-    long_description=file("README").read(),
+    long_description=file("README.md").read(),
     license='MIT/X',
     platforms=['BSD','Linux','MacOS X', 'win32'],
     packages=['LazyEvaluation'],
