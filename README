@@ -1,0 +1,166 @@
+Lazy Evaluation for Python
+============================
+
+This package implements something like lazy evaluation for Python - and
+it does so in 100% Python code. Installation is just the usual distutils
+stuff:
+
+python setup.py install
+
+It should work starting with Python 2.3. It might work with 2.2 with some
+minor hacking, but I switched to Python 2.3 as the base distribution.
+
+Regardless of what happens, a Promise should produce the same error message
+you would get without the Promise - just the code location should be
+different. This should be the case - but I can't guarantee it yet. If you
+notice a situation where a Promise gives some different exception from the
+object itself in the same situation, please notify me.
+
+Of course, since Python doesn't support lazy evaluation natively and since
+there aren't enough hooks in the interpreter to do something like this
+in Python at all, this is faked lazy evaluation. What it actually does, is
+wrapping function calls in objects that will force the function call result
+at the latest possible moment.
+
+There are several ways to get lazy evaluation in your code. The primary way
+is to use either the lazy/delay functions or to subclass LazyEvaluated or
+to use the LazyEvaluationMetaClass as a metaclass to your own class.
+
+Using delay
+-----------------
+
+>>> from LazyEvaluation import delay
+>>> 
+>>> def func(a, b):
+...     return a+b
+...
+>>> res = delay(func, (5, 6))
+>>> 
+>>> print repr(res)
+>>> print res
+
+This will print out a Promise instance in the first print statement and a
+number in the second print statement. This happens because print calls the
+__str__ method on objects passed in (or actually it uses the str builtin or
+something much like that one - on some objects it will call __str__ and on
+others like strings it will just return the string itself).
+
+Using lazy
+------------
+
+>>> from LazyEvaluation import lazy
+>>>
+>>> def func(a, b):
+...     return a+b
+...
+>>> func = lazy(func)
+>>> print repr(func(5,6))
+>>> print func(5,6)
+
+This will print the Promise instance in the first print and the number 11
+in the second print. The function 'lazy' turns any function into it's lazy
+equivalent. It can be used as decorator in Python 2.4, too.
+
+Using LazyEvaluated
+--------------------
+
+>>> from LazyEvaluation import LazyEvaluated
+>>>
+>>> class TestClass(LazyEvaluated):
+...
+...       def test(self, a, b):
+...           return a+b
+...
+>>> print repr(TestClass().test(5,6))
+>>> print TestClass().test(5,6)
+
+This will print the result number. To use LazyEvaluated will turn your class
+into a lazy evaluated class. Only the direct attributes will be turned into
+lazy evaluated methods, though! It's just a handy way if you don't have
+a full class hierarchy but just a single class you want to turn into something
+that evaluates lazy. It's probably not the best way to do this.
+
+Using LazyEvaluatedMetaClass
+------------------------------
+
+>>> from LazyEvaluation import LazyEvaluatedMetaClass
+>>>
+>>> class TestClass(object):
+...
+...       __metaclass__ = LazyEvaluatedMetaClass
+...
+...       def test(self, a, b):
+...           return a+b
+...
+>>> print repr(TestClass().test(5,6))
+>>> print TestClass().test(5,6)
+
+This will make all function attributes of your class into lazy evaluated
+methods. It's mostly identical to the above sample, only that it doesn't
+use inheritance. It might be usefull to build subclasses to already existing
+classes whose direct function attributes are evaluated lazy.
+
+Some bits on the semantics
+----------------------------
+
+Lazy evaluation for Python behaves a bit different from what fully lazy
+languages behave: it's not really full lazy evaluation but just deferred
+evaluation. Results are forced to be evaluated at the latest possible moment.
+To achieve this, the Promise* classes implement many standard magic methods
+and implement them by first forcing the deferred evaluations (so getting
+their real value) and applying the builtin method to those values.
+
+It has special handling for binary operator methods in that it first tries
+the primary method that was called and if that either doesn't exist or
+returns NotImplemented it will run the other method with reversed arguments.
+This should work for most situations where binary operators are used.
+
+Sometimes you might have the need to force evaluation without using any of
+the normal ways to force evaluation - for example to store a forced value
+somewhere. You can use the force(value) function for this:
+
+>>> from LazyEvaluation import force
+>>>
+>>> def anton(a,b):
+...     return range(a,b)
+...
+>>> f = lazy(anton)
+>>> l = f(1,10)
+>>> l = force(l)
+>>> print l
+
+There is one speciality in the behaviour of promises that can produce
+problems in your code: getattr and setattr don't force it's object!
+calling setattr on the promise actually will setattr to the promise object
+itself, not to the forced value. So if you set an attribute value on a promise
+and later force it, that forced value won't have the originally set attribute.
+The main reason for this is that overloading __setattr__ in promise classes is
+rather hairy - setattr handles all attribute setting and a promise does have
+some instance variables (== attributes). If you want to set attributes on
+values from a promise, you allways must force the value yourself.
+
+How to have new behaviour
+---------------------------
+
+Sometimes the builtin promise class Promise isn't what you need. If you
+want to build your own, you have two ways of doing it: either just subclass
+the Promise class and add your needed stuff or write your own class.
+
+Your own promise class must adhere to the Promise interface. It must
+define a __init__ method that accepts a function, an argument list and an
+optional argument dictionary. And it must define a __force__ method that
+forces it's evaluation. And it must use PromiseMetaClass as it's __metaclass__
+as that one will fill in all the needed magic methods. If it needs to change
+the way some magic method operats, it can just define that method locally -
+the metaclass will automatically skip that predefined method.
+
+An example for a different behaviour is the Futures.py module: this implements
+futures, a high-level-concurrency concept. Instead of just delaying the
+computation until the __force__ is called, a thread is started that computes
+the result in the background. If you try to force a Future, your call will
+block until the result is ready. Exceptions are catched and later reraised,
+too. This allows very easy parallism in your code - just push some
+computation into the background and if it is ready when you access it, your
+code will just go on. Only if it isn't already fullfilled will you have to
+wait for it.
+

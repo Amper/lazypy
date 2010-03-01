@@ -1,0 +1,10 @@
+syntax: glob
+
+*.pyc
+*.db
+*.db-journal
+
+build/
+dist/
+lazypy.egg-info/
+
