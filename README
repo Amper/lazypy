@@ -14,17 +14,22 @@ be possible to still make it work with versions as far back as Python 2.3.
 What is lazy evaluation or promises?
 --------------------------------------
 
-Regardless of what happens, a Promise should produce the same error message
-you would get without the Promise - just the code location should be
-different. This should be the case - but I can't guarantee it yet. If you
-notice a situation where a Promise gives some different exception from the
-object itself in the same situation, please notify me.
+Lazy evaluation is a way to encapsulate a calculation without actually
+computing it - it will only be computed when the result of that calculation
+is actually accessed. After the calculation is done, further access to
+the lazy calculation will just return the cached result.
 
 Of course, since Python doesn't support lazy evaluation natively and since
 there aren't enough hooks in the interpreter to do something like this
 in Python at all, this is faked lazy evaluation. What it actually does, is
 wrapping function calls in objects that will force the function call result
 at the latest possible moment.
+
+Regardless of what happens, a Promise should produce the same error message
+you would get without the Promise - just the code location should be
+different. This should be the case - but I can't guarantee it yet. If you
+notice a situation where a Promise gives some different exception from the
+object itself in the same situation, please notify me.
 
 There are several ways to get lazy evaluation in your code. The primary way
 is to use either the lazy/delay functions or to subclass LazyEvaluated or
@@ -110,7 +115,7 @@ Some bits on the semantics
 Lazy evaluation for Python behaves a bit different from what fully lazy
 languages behave: it's not really full lazy evaluation but just deferred
 evaluation. Results are forced to be evaluated at the latest possible moment.
-To achieve this, the Promise* classes implement many standard magic methods
+To achieve this, the Promise class implements many standard magic methods
 and implement them by first forcing the deferred evaluations (so getting
 their real value) and applying the builtin method to those values.
 
@@ -155,7 +160,7 @@ define a __init__ method that accepts a function, an argument list and an
 optional argument dictionary. And it must define a __force__ method that
 forces it's evaluation. And it must use PromiseMetaClass as it's __metaclass__
 as that one will fill in all the needed magic methods. If it needs to change
-the way some magic method operats, it can just define that method locally -
+the way some magic method operates, it can just define that method locally -
 the metaclass will automatically skip that predefined method.
 
 An example for a different behaviour is the Futures.py module: this implements
