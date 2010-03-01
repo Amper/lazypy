@@ -1,7 +1,7 @@
 """
 Lazy Evaluation for Python - main package with primary exports
 
-Copyright (c) 2004, Georg Bauer <gb@murphy.bofh.ms>, except where the file
+Copyright (c) 2004, Georg Bauer <gb@rfc1437.de>, except where the file
 explicitly names other copyright holders and licenses.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
@@ -29,6 +29,7 @@ assert sys.hexversion >= 0x02030000, 'at least Python 2.3 is needed'
 
 from Promises import Promise, PromiseMetaClass, force
 from Futures import Future
+from ForkedFutures import ForkedFuture
 from LazyClasses import LazyEvaluated, LazyEvaluatedMetaClass
 from Functions import delay, lazy, spawn, future
 

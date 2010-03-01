@@ -1,7 +1,7 @@
 """
 Lazy Evaluation for Python - convenience classes
 
-Copyright (c) 2004, Georg Bauer <gb@murphy.bofh.ms>, except where the file
+Copyright (c) 2004, Georg Bauer <gb@rfc1437.de>, except where the file
 explicitly names other copyright holders and licenses.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
@@ -24,8 +24,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-# $Id: LazyClasses.py 12 2004-12-24 21:48:53Z gb $
-
 import types
 
 from Promises import Promise
@@ -33,27 +31,27 @@ from Functions import lazy
 
 class LazyEvaluatedMetaClass(type):
 
-	"""
-	This meta class rewrites all function attributes to not directly
-	run but to yield a generator that will run the function later on.
-	"""
+    """
+    This meta class rewrites all function attributes to not directly
+    run but to yield a generator that will run the function later on.
+    """
 
-	def __init__(klass, name, bases, attributes):
-		promiseclass = getattr(klass, '__promiseclass__', Promise)
-		for (k, v) in attributes.items():
-			if isinstance(v, types.FunctionType):
-				setattr(klass, k, lazy(v, promiseclass))
-		super(LazyEvaluatedMetaClass, klass).__init__(name,
-			bases, attributes)
+    def __init__(klass, name, bases, attributes):
+        promiseclass = getattr(klass, '__promiseclass__', Promise)
+        for (k, v) in attributes.items():
+            if isinstance(v, types.FunctionType):
+                setattr(klass, k, lazy(v, promiseclass))
+        super(LazyEvaluatedMetaClass, klass).__init__(name,
+            bases, attributes)
 
 class LazyEvaluated(object):
 
-	"""
-	This is the base class for all classes that should evaluate in
-	a lazy fashion. You can overload __promiseclass__ if you want to
-	have different promise handling in your code.
-	"""
+    """
+    This is the base class for all classes that should evaluate in
+    a lazy fashion. You can overload __promiseclass__ if you want to
+    have different promise handling in your code.
+    """
 
-	__metaclass__ = LazyEvaluatedMetaClass
-	__promiseclass__ = Promise
+    __metaclass__ = LazyEvaluatedMetaClass
+    __promiseclass__ = Promise
 

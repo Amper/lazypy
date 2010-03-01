@@ -2,13 +2,14 @@ Lazy Evaluation for Python
 ============================
 
 This package implements something like lazy evaluation for Python - and
-it does so in 100% Python code. Installation is just the usual distutils
-stuff:
+it does so in 100% Python code. Installation is standard:
 
-python setup.py install
+easy_install lazypy
 
-It should work starting with Python 2.3. It might work with 2.2 with some
-minor hacking, but I switched to Python 2.3 as the base distribution.
+I test and work with it under Python 2.6, so that's where I can say it
+works with newer versions. For older versions you lose forked futures,
+since multiprocessing is part of Python starting with 2.6. But it might
+be possible to still make it work with versions as far back as Python 2.3.
 
 Regardless of what happens, a Promise should produce the same error message
 you would get without the Promise - just the code location should be
@@ -59,7 +60,7 @@ Using lazy
 
 This will print the Promise instance in the first print and the number 11
 in the second print. The function 'lazy' turns any function into it's lazy
-equivalent. It can be used as decorator in Python 2.4, too.
+equivalent. It can be used as decorator in Python 2.4 and up.
 
 Using LazyEvaluated
 --------------------
@@ -163,4 +164,17 @@ too. This allows very easy parallism in your code - just push some
 computation into the background and if it is ready when you access it, your
 code will just go on. Only if it isn't already fullfilled will you have to
 wait for it.
+
+Starting with lazypy 0.3 there are ForkedFutures, too. Those behave much like
+the normal futures, but run in a separate process. This allows writing code
+that makes better use of multicore systems, since multiple processes allow
+getting around the global interpreter lock. These ForkedFutures make use
+of the multiprocessing module in Python 2.6, so won't be available with older
+python versions (and their test cases will fail on older versions).
+
+To make use of futures, you can just use the spawn/future pair of functions
+that behave exactly like delay/lazy - spawn is a parallel version of apply
+and future is a decorator that turns any callable into a parallel version
+of itself. To use ForkedFutures, just pass the ForkedFuture class as the
+class to be used for the future in those calls.
 

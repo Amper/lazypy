@@ -1,7 +1,7 @@
 """
-Lazy Evaluation for Python - futures (high level concurrency) for python
+Lazy Evaluation for Python - forked futures (high level concurrency) for python
 
-Copyright (c) 2004, Georg Bauer <gb@rfc1437.de>, except where the file
+Copyright (c) 2010, Georg Bauer <gb@rfc1437.de>, except where the file
 explicitly names other copyright holders and licenses.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
@@ -24,18 +24,11 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from threading import Condition, Thread
+from multiprocessing import Process, Queue
 from Promises import Promise, PromiseMetaClass
 from Utils import NoneSoFar
 
-class BrokenFutureError(Exception):
-    """
-    This exception is thrown if a future is broken - if it neither
-    has a result nor has an exception.
-    """
-    pass
-
-class Future(object):
+class ForkedFuture(object):
 
     """
     This class builds future objects. A future is something that
@@ -61,36 +54,24 @@ class Future(object):
 
     def __init__(self, func, args, kw):
         """
-        Start a thread with the function to be computed. Block the
-        result with a lock so that somebody trying to force the
-        value will block until we are complete. If the thread
+        Start a process with the function to be computed. Block the
+        result with a queue so that somebody trying to force the
+        value will block until we are complete. If the process
         get's an exception, store that for raising on force.
-
-        We use a thread condition to make sure that the thread is
-        started before we continue our main flow.
         """
 
         def thunk():
-            self.__sync.acquire()
             try:
-                self.__sync.notify()
-                try:
-                    self.__result = apply(func, args, kw)
-                except Exception, e:
-                    self.__exception = e
-            finally:
-                self.__sync.release()
+                res = apply(func, args, kw)
+                self.__queue.put((True, res))
+            except Exception, e:
+                self.__queue.put((False, e))
 
+        self.__queue = Queue()
         self.__result = NoneSoFar
         self.__exception = NoneSoFar
-        self.__sync = Condition()
-        self.__sync.acquire()
-        try:
-            self.__thread = Thread(target=thunk)
-            self.__thread.start()
-            self.__sync.wait()
-        finally:
-            self.__sync.release()
+        self.__proc = Process(target=thunk)
+        self.__proc.start()
     
     def __force__(self):
         """
@@ -99,15 +80,14 @@ class Future(object):
         call will block until it has.
         """
 
-        self.__sync.acquire()
-        try:
-            if self.__result is not NoneSoFar:
-                return self.__result
-            elif self.__exception is not NoneSoFar:
-                raise self.__exception
+        if self.__result is NoneSoFar and self.__exception is NoneSoFar:
+            (f, v) = self.__queue.get()
+            if f:
+                self.__result = v
             else:
-                raise BrokenFutureError
-        finally:
-            self.__sync.release()
+                self.__exception = v
+        if self.__result is not NoneSoFar:
+            return self.__result
+        elif self.__exception is not NoneSoFar:
+            raise self.__exception
     
-
