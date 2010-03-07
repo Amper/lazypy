@@ -17,7 +17,8 @@ ATTENTION: if you used versions before 0.5, you had a different module name
 `LazyEvaluation` instead of of the current `lazypy`. I changed this with 0.5
 but kept the `LazyEvaluation` package name around as a proxy for old code.
 This old package name is deprecated, though, and will go away in one of the
-future versions.
+future versions. One breaking change is that `__version__` is only available
+through the `lazypy` package, not the old compatibility package.
 
 What is lazy evaluation or promises?
 --------------------------------------

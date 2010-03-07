@@ -1,5 +1,5 @@
 from setuptools import setup
-from LazyEvaluation import __version__
+from lazypy import __version__
 
 setup(
     version = __version__,
@@ -20,5 +20,5 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
     ],
-    test_suite="LazyEvaluation.tests",
+    test_suite="lazypy.tests",
 )
