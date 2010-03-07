@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-from LazyEvaluation import *
+from lazypy import *
 from LazyEvaluation.Utils import NoneSoFar
 
 class MySpecialError(Exception):

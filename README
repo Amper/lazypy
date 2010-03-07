@@ -13,6 +13,12 @@ works with newer versions. For older versions you lose forked futures,
 since multiprocessing is part of Python starting with 2.6. But it might
 be possible to still make it work with versions as far back as Python 2.3.
 
+ATTENTION: if you used versions before 0.5, you had a different module name
+`LazyEvaluation` instead of of the current `lazypy`. I changed this with 0.5
+but kept the `LazyEvaluation` package name around as a proxy for old code.
+This old package name is deprecated, though, and will go away in one of the
+future versions.
+
 What is lazy evaluation or promises?
 --------------------------------------
 
