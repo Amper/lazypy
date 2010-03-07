@@ -11,7 +11,7 @@ setup(
     long_description=file("README").read(),
     license='MIT/X',
     platforms=['BSD','Linux','MacOS X', 'win32'],
-    packages=['LazyEvaluation'],
+    packages=['lazypy', 'LazyEvaluation'],
     scripts=['test.py'],
     classifiers=[
         "Development Status :: 4 - Beta",
