@@ -1,7 +1,8 @@
 from setuptools import setup
+from LazyEvaluation import __version__
 
 setup(
-    version = "0.3",
+    version = __version__,
     description = "Lazy Evaluation for Python",
     author = "Georg Bauer",
     author_email = "gb@rfc1437.de",

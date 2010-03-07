@@ -25,7 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 import sys
-assert sys.hexversion >= 0x02030000, 'at least Python 2.3 is needed'
+assert sys.hexversion >= 0x02060000, 'at least Python 2.6 is needed'
+
+__version__ = "0.3"
 
 from Promises import Promise, PromiseMetaClass, force
 from Futures import Future
