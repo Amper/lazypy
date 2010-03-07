@@ -12,7 +12,7 @@ setup(
     license='MIT/X',
     platforms=['BSD','Linux','MacOS X', 'win32'],
     packages=['lazypy', 'LazyEvaluation'],
-    scripts=['test.py'],
+    scripts=[],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
