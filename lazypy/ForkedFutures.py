@@ -24,7 +24,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Pipe
 from Promises import Promise, PromiseMetaClass
 from Utils import NoneSoFar
 
@@ -63,11 +63,11 @@ class ForkedFuture(object):
         def thunk():
             try:
                 res = apply(func, args, kw)
-                self.__queue.put((True, res))
+                self.__pipe_out.send((True, res))
             except Exception, e:
-                self.__queue.put((False, e))
+                self.__pipe_out.send((False, e))
 
-        self.__queue = Queue()
+        self.__pipe_out, self.__pipe_in = Pipe()
         self.__result = NoneSoFar
         self.__exception = NoneSoFar
         self.__proc = Process(target=thunk)
@@ -81,7 +81,7 @@ class ForkedFuture(object):
         """
 
         if self.__result is NoneSoFar and self.__exception is NoneSoFar:
-            (f, v) = self.__queue.get()
+            (f, v) = self.__pipe_in.recv()
             if f:
                 self.__result = v
             else:
