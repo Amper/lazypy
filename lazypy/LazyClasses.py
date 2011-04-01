@@ -41,12 +41,12 @@ class LazyEvaluatedMetaClass(type):
     run but to yield a generator that will run the function later on.
     """
 
-    def __init__(klass, name, bases, attributes):
-        promiseclass = getattr(klass, '__promiseclass__', Promise)
+    def __init__(cls, name, bases, attributes):
+        promiseclass = getattr(cls, '__promiseclass__', Promise)
         for (k, v) in attributes.items():
             if isinstance(v, types.FunctionType):
-                setattr(klass, k, lazy(v, promiseclass))
-        super(LazyEvaluatedMetaClass, klass).__init__(name, bases, attributes)
+                setattr(cls, k, lazy(v, promiseclass))
+        super(LazyEvaluatedMetaClass, cls).__init__(name, bases, attributes)
 
 # It's awful, but works in Python 2 and Python 3
 LazyEvaluated = LazyEvaluatedMetaClass('LazyEvaluated', (object,), {})

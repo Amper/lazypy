@@ -25,17 +25,24 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+import sys
+import operator
+
 __all__ = ["NoneSoFar",
-           "getitem",
-           "setitem",
-           "delitem",
            "getslice",
            "setslice",
            "delslice",
+           "getitem",
+           "setitem",
+           "delitem",
+           "apply",
+           "unicode",
+           "cmp",
+           "long",
+           "PY_VER",
           ]
 
 class NoneSoFar(object):
-
     """
     This is a singleton to give you something to put somewhere that
     should never be a rightfull return value of anything.
@@ -51,52 +58,49 @@ class NoneSoFar(object):
         return 0
 
 NoneSoFar = NoneSoFar()
+PY_VER = sys.version_info[0]
 
-def getitem(obj, key):
-    """
-    This is a helper function needed in promise objects to pass
-    on __getitem__ calls. It just mimicks the getattr call, only
-    it uses dictionary style access.
-    """
-    return obj[key]
+getitem = operator.getitem
+setitem = operator.setitem
+delitem = operator.delitem
 
-def setitem(obj, key, value):
-    """
-    This is a helper function needed in promise objects to pass
-    on __setitem__ calls. It just mimicks the setattr call, only
-    it uses dictionary style access.
-    """
-    obj[key] = value
+if PY_VER >= 3:
 
-def delitem(obj, key):
-    """
-    This is a helper function needed in promise objects to pass
-    on __delitem__ calls. It just mimicks the delattr call, only
-    it uses dictionary style access.
-    """
-    del obj[key]
+    apply = lambda func, args=[], kwargs={}: func(*args, **kwargs)
+    unicode = str
+    cmp = lambda a,b: (a > b) - (a < b)
+    long = int
 
-def getslice(obj, start, stop):
-    """
-    This is a helper function needed in promise objects to pass
-    on __getslice__ calls. It just mimicks the getattr call, only
-    it uses dictionary style access.
-    """
-    return obj[start:stop]
+    def getslice(obj, start, stop):
+        """
+        This is a helper function needed in promise objects to pass
+        on __getslice__ calls. It just mimicks the getattr call, only
+        it uses dictionary style access.
+        """
+        return obj[start:stop]
+    
+    def setslice(obj, start, stop, value):
+        """
+        This is a helper function needed in promise objects to pass
+        on __setslice__ calls. It just mimicks the setattr call, only
+        it uses dictionary style access.
+        """
+        obj[start:stop] = value
+    
+    def delslice(obj, start, stop):
+        """
+        This is a helper function needed in promise objects to pass
+        on __delslice__ calls. It just mimicks the delattr call, only
+        it uses dictionary style access.
+        """
+        del obj[start:stop]
 
-def setslice(obj, start, stop, value):
-    """
-    This is a helper function needed in promise objects to pass
-    on __setslice__ calls. It just mimicks the setattr call, only
-    it uses dictionary style access.
-    """
-    obj[start:stop] = value
+else:
 
-def delslice(obj, start, stop):
-    """
-    This is a helper function needed in promise objects to pass
-    on __delslice__ calls. It just mimicks the delattr call, only
-    it uses dictionary style access.
-    """
-    del obj[start:stop]
-
+	apply = apply
+	unicode = unicode
+	cmp = cmp
+	long = long
+	getslice = operator.getslice
+	setslice = operator.setslice
+	delslice = operator.delslice

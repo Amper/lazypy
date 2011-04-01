@@ -30,8 +30,7 @@ import sys
 import unittest
 
 from lazypy import *
-from lazypy.__py2comp__ import *
-from lazypy.Utils import NoneSoFar
+from lazypy.Utils import *
 
 class MySpecialError(Exception):
     pass

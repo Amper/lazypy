@@ -27,9 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import functools
 import sys
-import operator
 from lazypy.Utils import *
-from lazypy.__py2comp__ import *
 
 __all__ = ["force",
            "PromiseMetaClass",
@@ -226,8 +224,6 @@ class Promise(Promise):
     chains of delayed functions. Method access on promises will be
     factored as one getattr promise followed by one apply promise.
     """
-
-    __metaclass__ = PromiseMetaClass
 
     def __init__(self, func, args, kw):
         """
