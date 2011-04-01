@@ -25,10 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from multiprocessing import Process, Pipe
-from Promises import Promise, PromiseMetaClass
-from Utils import NoneSoFar
+from lazypy.Promises import Promise, PromiseMetaClass
+from lazypy.Utils import NoneSoFar
 
-class ForkedFuture(object):
+# It's awful, but works in Python 2 and Python 3
+ForkedFuture = PromiseMetaClass('ForkedFuture', (object,), {})
+class ForkedFuture(ForkedFuture):
 
     """
     This class builds future objects. A future is something that

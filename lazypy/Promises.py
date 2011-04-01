@@ -24,13 +24,11 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from Utils import *
 import functools
 import sys
+from lazypy.Utils import *
+from lazypy.__py2comp__ import *
 
-PY2 = sys.version_info[0] < 3
-if not PY2:
-    apply = lambda func, *args, **kwargs: func(*args, **kwargs)
 
 def force(value):
     """
@@ -84,12 +82,12 @@ class PromiseMetaClass(type):
                          ('__rfloordiv__', '__floordiv__'), 
                          ('__rpow__', '__pow__')]
     
-    __magicfunctions__ = [('__cmp__', lambda a,b: (a > b) - (a < b)), 
+    __magicfunctions__ = [('__cmp__', cmp), 
                           ('__str__', str),
-                          ('__unicode__', unicode if PY2 else str), 
+                          ('__unicode__', unicode), 
                           ('__complex__', complex),
                           ('__int__', int), 
-                          ('__long__', long if PY2 else int), 
+                          ('__long__', long), 
                           ('__float__', float),
                           ('__oct__', oct), 
                           ('__hex__', hex), 
@@ -108,15 +106,15 @@ class PromiseMetaClass(type):
 
     def __init__(klass, name, bases, attributes):
         for k in klass.__magicmethods__:
-            if not attributes.has_key(k):
+            if k not in attributes:
                 setattr(klass, k, klass.__forcedmethodname__(k))
         for (k, v) in klass.__magicrmethods__:
-            if not attributes.has_key(k):
+            if k not in attributes:
                 setattr(klass, k, klass.__forcedrmethodname__(k, v))
-            if not attributes.has_key(v):
+            if v not in attributes:
                 setattr(klass, v, klass.__forcedrmethodname__(v, k))
         for (k, v) in klass.__magicfunctions__:
-            if not attributes.has_key(k):
+            if k not in attributes:
                 setattr(klass, k, klass.__forcedmethodfunc__(v))
         super(PromiseMetaClass, klass).__init__(name, bases, attributes)
 
@@ -128,11 +126,12 @@ class PromiseMetaClass(type):
         """
 
         
-        def wrapped_method(self, *args):
+        def wrapped_method(self, *args, **kwargs):
             result = force(self)
             meth = getattr(result, method)
             args = [force(arg) for arg in args]
-            return apply(meth, args)
+            kwargs = dict([(k,force(v)) for k,v in kwargs.items()])
+            return meth(*args, **kwargs)
 
         return wrapped_method
     
@@ -170,11 +169,10 @@ class PromiseMetaClass(type):
         and then calls the function on those arguments.
         """
 
-        def wrapped_method(*args):
-            return apply(func, [force(arg) for arg in args])
-
-        wrapped_method.__name__ = method.__name__
-        wrapped_method.__doc__  = method.__doc__
+        def wrapped_method(*args, **kwargs):
+            args = [force(arg) for arg in args]
+            kwargs = dict([(k,force(v)) for k,v in kwargs.items()])
+            return func(*args, **kwargs)
 
         return wrapped_method
     
@@ -195,7 +193,9 @@ class PromiseMetaClass(type):
 
         return wrapped_method
     
-class Promise(object):
+# It's awful, but works in Python 2 and Python 3
+Promise = PromiseMetaClass('Promise', (object,), {})
+class Promise(Promise):
 
     """
     The initialization get's the function and it's parameters to
@@ -230,5 +230,5 @@ class Promise(object):
             args = [force(arg) for arg in self.__args]
             kw = dict([(k, force(v)) for (k, v)
                     in self.__kw.items()])
-            self.__result = apply(self.__func, args, kw)
+            self.__result = self.__func(*args, **kw)
         return self.__result

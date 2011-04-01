@@ -24,9 +24,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from Promises import Promise
-from Futures import Future
-from ForkedFutures import ForkedFuture
+from lazypy.Promises import Promise
+from lazypy.Futures import Future
+from lazypy.ForkedFutures import ForkedFuture
 
 def delay(funk, args=None, kw=None, promiseclass=Promise):
 

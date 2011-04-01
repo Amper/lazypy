@@ -26,8 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import types
 
-from Promises import Promise
-from Functions import lazy
+from lazypy.Promises import Promise
+from lazypy.Functions import lazy
 
 class LazyEvaluatedMetaClass(type):
 
@@ -43,7 +43,9 @@ class LazyEvaluatedMetaClass(type):
                 setattr(klass, k, lazy(v, promiseclass))
         super(LazyEvaluatedMetaClass, klass).__init__(name, bases, attributes)
 
-class LazyEvaluated(object):
+# It's awful, but works in Python 2 and Python 3
+LazyEvaluated = LazyEvaluatedMetaClass('LazyEvaluated', (object,), {})
+class LazyEvaluated(LazyEvaluated):
 
     """
     This is the base class for all classes that should evaluate in

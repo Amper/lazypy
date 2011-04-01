@@ -25,13 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 import sys
-assert sys.hexversion >= 0x02060000, 'at least Python 2.6 is needed'
+assert sys.hexversion >= 0x02070000, 'at least Python 2.7 is needed'
 
 __version__ = "0.5"
 
-from Promises import Promise, PromiseMetaClass, force
-from Futures import Future
-from ForkedFutures import ForkedFuture
-from LazyClasses import LazyEvaluated, LazyEvaluatedMetaClass
-from Functions import delay, lazy, spawn, future, fork, forked
+from lazypy.Promises import Promise, PromiseMetaClass, force
+from lazypy.Futures import Future
+from lazypy.ForkedFutures import ForkedFuture
+from lazypy.LazyClasses import LazyEvaluated, LazyEvaluatedMetaClass
+from lazypy.Functions import delay, lazy, spawn, future, fork, forked
 

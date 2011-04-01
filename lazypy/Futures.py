@@ -25,8 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from threading import Condition, Thread
-from Promises import Promise, PromiseMetaClass
-from Utils import NoneSoFar
+from lazypy.Promises import Promise, PromiseMetaClass
+from lazypy.Utils import NoneSoFar
 
 class BrokenFutureError(Exception):
     """
@@ -35,7 +35,9 @@ class BrokenFutureError(Exception):
     """
     pass
 
-class Future(object):
+# It's awful, but works in Python 2 and Python 3
+Future = PromiseMetaClass('Future', (object,), {})
+class Future(Future):
 
     """
     This class builds future objects. A future is something that
