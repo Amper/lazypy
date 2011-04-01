@@ -47,7 +47,7 @@ to use the LazyEvaluationMetaClass as a metaclass to your own class.
 Using delay
 -----------------
 
->>> from LazyEvaluation import delay
+>>> from lazypy import delay
 >>> 
 >>> def func(a, b):
 ...     return a+b
@@ -66,7 +66,7 @@ others like strings it will just return the string itself).
 Using lazy
 ------------
 
->>> from LazyEvaluation import lazy
+>>> from lazypy import lazy
 >>>
 >>> def func(a, b):
 ...     return a+b
@@ -82,7 +82,7 @@ equivalent. It can be used as decorator in Python 2.4 and up.
 Using LazyEvaluated
 --------------------
 
->>> from LazyEvaluation import LazyEvaluated
+>>> from lazypy import LazyEvaluated
 >>>
 >>> class TestClass(LazyEvaluated):
 ...
@@ -101,7 +101,7 @@ that evaluates lazy. It's probably not the best way to do this.
 Using LazyEvaluatedMetaClass
 ------------------------------
 
->>> from LazyEvaluation import LazyEvaluatedMetaClass
+>>> from lazypy import LazyEvaluatedMetaClass
 >>>
 >>> class TestClass(object):
 ...
@@ -137,7 +137,7 @@ Sometimes you might have the need to force evaluation without using any of
 the normal ways to force evaluation - for example to store a forced value
 somewhere. You can use the force(value) function for this:
 
->>> from LazyEvaluation import force
+>>> from lazypy import force
 >>>
 >>> def anton(a,b):
 ...     return range(a,b)
