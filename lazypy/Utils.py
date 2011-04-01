@@ -1,8 +1,9 @@
 """
-Lazy Evaluation for Python - utility functions
+Lazy Evaluation for Python - main package with primary exports
 
-Copyright (c) 2004, Georg Bauer <gb@rfc1437.de>, except where the file
-explicitly names other copyright holders and licenses.
+Copyright (c) 2004, Georg Bauer <gb@murphy.bofh.ms>, 
+Copyright (c) 2011, Alexander Marshalov <alone.amper@gmail.com>, 
+except where the file explicitly names other copyright holders and licenses.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
 this software and associated documentation files (the "Software"), to deal in 
