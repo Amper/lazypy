@@ -25,6 +25,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+__all__ = ["NoneSoFar",
+           "getitem",
+           "setitem",
+           "delitem",
+           "getslice",
+           "setslice",
+           "delslice",
+          ]
+
 class NoneSoFar(object):
 
     """

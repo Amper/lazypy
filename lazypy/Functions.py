@@ -29,6 +29,14 @@ from lazypy.Promises import Promise
 from lazypy.Futures import Future
 from lazypy.ForkedFutures import ForkedFuture
 
+__all__ = ["delay",
+           "lazy",
+           "spawn",
+           "future",
+           "fork",
+           "forked",
+          ]
+
 def delay(funk, args=None, kw=None, promiseclass=Promise):
 
     """

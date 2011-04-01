@@ -29,6 +29,9 @@ from multiprocessing import Process, Pipe
 from lazypy.Promises import Promise, PromiseMetaClass
 from lazypy.Utils import NoneSoFar
 
+__all__ = ["ForkedFuture",
+          ]
+
 # It's awful, but works in Python 2 and Python 3
 ForkedFuture = PromiseMetaClass('ForkedFuture', (object,), {})
 class ForkedFuture(ForkedFuture):
@@ -52,7 +55,6 @@ class ForkedFuture(ForkedFuture):
     normal promise.
     """
 
-    __metaclass__ = PromiseMetaClass
     __delayclass__ = Promise
 
     def __init__(self, func, args, kw):

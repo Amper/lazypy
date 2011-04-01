@@ -29,6 +29,9 @@ from threading import Condition, Thread
 from lazypy.Promises import Promise, PromiseMetaClass
 from lazypy.Utils import NoneSoFar
 
+__all__ = ["Future",
+          ]
+
 class BrokenFutureError(Exception):
     """
     This exception is thrown if a future is broken - if it neither
@@ -59,7 +62,6 @@ class Future(Future):
     normal promise.
     """
 
-    __metaclass__ = PromiseMetaClass
     __delayclass__ = Promise
 
     def __init__(self, func, args, kw):

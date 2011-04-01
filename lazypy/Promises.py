@@ -31,6 +31,10 @@ import operator
 from lazypy.Utils import *
 from lazypy.__py2comp__ import *
 
+__all__ = ["force",
+           "PromiseMetaClass",
+           "Promise",
+          ]
 
 def force(value):
     """

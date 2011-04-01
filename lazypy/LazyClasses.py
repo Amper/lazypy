@@ -30,6 +30,10 @@ import types
 from lazypy.Promises import Promise
 from lazypy.Functions import lazy
 
+__all__ = ["LazyEvaluatedMetaClass",
+           "LazyEvaluated",
+          ]
+
 class LazyEvaluatedMetaClass(type):
 
     """
@@ -54,6 +58,5 @@ class LazyEvaluated(LazyEvaluated):
     have different promise handling in your code.
     """
 
-    __metaclass__ = LazyEvaluatedMetaClass
     __promiseclass__ = Promise
 
