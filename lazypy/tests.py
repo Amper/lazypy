@@ -67,9 +67,8 @@ class MyPromise(object):
     def __force__(self):
         if self.__result is NoneSoFar:
             args = [force(arg) for arg in self.__args]
-            kw = dict([(k, force(v)) for (k, v)
-                    in self.__kw.items()])
-            self.__result = apply(self.__func, args, kw)
+            kw = dict([(k, force(v)) for (k, v) in self.__kw.items()])
+            self.__result = self.__func(*args, **kw)
         return self.__result
 
 class LazyClass(LazyEvaluated):
@@ -282,73 +281,73 @@ class TestCase400LazyLists(unittest.TestCase):
         l = [int(x) for x in self.func(0,10)]
         self.assertEqual(l, range(0,10))
 
-#class TestCase500Futures(unittest.TestCase):
+class TestCase500Futures(unittest.TestCase):
 
-    #def testFastFuture(self):
-        #f = spawn(lambda : 5+6)
-        #self.assertTrue(isinstance(f, Future))
-        #self.assertEqual(f, 11)
+    def testFastFuture(self):
+        f = spawn(lambda : 5+6)
+        self.assertTrue(isinstance(f, Future))
+        self.assertEqual(f, 11)
 
-    #def testLongerFuture(self):
+    def testLongerFuture(self):
         
-        #def fib(n):
-            #if n in (0,1):
-                #return 1
-            #return fib(n-1) + fib(n-2)
+        def fib(n):
+            if n in (0,1):
+                return 1
+            return fib(n-1) + fib(n-2)
 
-        #f = future(fib)
-        #for n in (5, 10, 20):
-            #self.assertEqual(f(n), fib(n))
+        f = future(fib)
+        for n in (5, 10, 20):
+            self.assertEqual(f(n), fib(n))
     
-#class TestCase550ForkedFutures(unittest.TestCase):
+class TestCase550ForkedFutures(unittest.TestCase):
 
-    #def testFastFuture(self):
-        #f = fork(lambda : 5+6)
-        #self.assertTrue(isinstance(f, ForkedFuture))
-        #self.assertEqual(f, 11)
-        #self.assertEqual(f, 11)
-        #self.assertEqual(f, 11)
+    def testFastFuture(self):
+        f = fork(lambda : 5+6)
+        self.assertTrue(isinstance(f, ForkedFuture))
+        self.assertEqual(f, 11)
+        self.assertEqual(f, 11)
+        self.assertEqual(f, 11)
 
-    #def testFutureWithException(self):
-        #def crasher():
-            #raise MySpecialError(55)
+    def testFutureWithException(self):
+        def crasher():
+            raise MySpecialError(55)
 
-        #f = fork(crasher)
-        #self.assertTrue(isinstance(f, ForkedFuture))
-        #self.assertRaises(MySpecialError, crasher)
+        f = fork(crasher)
+        self.assertTrue(isinstance(f, ForkedFuture))
+        self.assertRaises(MySpecialError, crasher)
 
-    #def testLongerFuture(self):
+    def testLongerFuture(self):
         
-        #def fib(n):
-            #if n in (0,1):
-                #return 1
-            #return fib(n-1) + fib(n-2)
+        def fib(n):
+            if n in (0,1):
+                return 1
+            return fib(n-1) + fib(n-2)
 
-        #f = forked(fib)
-        #for n in (5, 10, 20, 30):
-            #self.assertEqual(f(n), fib(n))
+        f = forked(fib)
+        for n in (5, 10, 20, 30):
+            self.assertEqual(f(n), fib(n))
     
-#class TestCase600LazyMethod(unittest.TestCase):
+class TestCase600LazyMethod(unittest.TestCase):
 
-    #def testAttribute(self):
-        #o = ClassWithLazyMethod()
-        #self.assertTrue(isinstance(o.attr, Promise))
-        #self.assertEqual(o.attr, 11)
+    def testAttribute(self):
+        o = ClassWithLazyMethod()
+        self.assertTrue(isinstance(o.attr, Promise))
+        self.assertEqual(o.attr, 11)
     
-    #def testNonZero(self):
-        #o = ClassWithLazyMethod()
-        #self.assertTrue(isinstance(o.attr, Promise))
-        #self.assertEqual(getattr(o.attr, 'blah', True), True)
+    def testNonZero(self):
+        o = ClassWithLazyMethod()
+        self.assertTrue(isinstance(o.attr, Promise))
+        self.assertEqual(getattr(o.attr, 'blah', True), True)
 
-    #def testString(self):
-        #o = ClassWithLazyMethod()
-        #self.assertTrue(isinstance(o.attr, Promise))
-        #self.assertEqual(('a%sb' % o.attr), 'a11b')
+    def testString(self):
+        o = ClassWithLazyMethod()
+        self.assertTrue(isinstance(o.attr, Promise))
+        self.assertEqual(('a%sb' % o.attr), 'a11b')
 
-    #def testInteger(self):
-        #o = ClassWithLazyMethod()
-        #self.assertTrue(isinstance(o.attr, Promise))
-        #self.assertEqual(5+o.attr, 16)
+    def testInteger(self):
+        o = ClassWithLazyMethod()
+        self.assertTrue(isinstance(o.attr, Promise))
+        self.assertEqual(5+o.attr, 16)
 
 if __name__ == '__main__':
     unittest.main()

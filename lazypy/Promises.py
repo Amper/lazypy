@@ -67,7 +67,12 @@ class PromiseMetaClass(type):
     of the promise.
     """
 
-    __magicmethods__ = ['__abs__', '__pos__', '__invert__', '__neg__']
+    __magicmethods__ = ['__abs__', 
+                        '__pos__', 
+                        '__invert__', 
+                        '__neg__',
+                        '__reversed__',
+                       ]
     
     __magicrmethods__ = [('__radd__', '__add__'), 
                          ('__rsub__', '__sub__'),
@@ -84,6 +89,11 @@ class PromiseMetaClass(type):
                          ('__rfloordiv__', '__floordiv__'), 
                          ('__rpow__', '__pow__'),
                          ('__req__', '__eq__'),
+                         ('__rlt__', '__lt__'),
+                         ('__rle__', '__le__'),
+                         ('__rne__', '__ne__'),
+                         ('__rgt__', '__gt__'),
+                         ('__rge__', '__ge__'),
                         ]
     
     __magicfunctions__ = [('__cmp__', cmp), 
