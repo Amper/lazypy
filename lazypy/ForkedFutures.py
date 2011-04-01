@@ -64,7 +64,7 @@ class ForkedFuture(object):
             try:
                 res = apply(func, args, kw)
                 self.__pipe_out.send((True, res))
-            except Exception, e:
+            except Exception as e:
                 self.__pipe_out.send((False, e))
 
         self.__pipe_out, self.__pipe_in = Pipe()

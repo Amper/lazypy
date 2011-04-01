@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import sys
 import unittest
 
@@ -111,8 +112,8 @@ class TestCase100Simple(unittest.TestCase):
 
     def testLongs(self):
         funk = lazy(anton)
-        self.assertTrue(isinstance(funk(5L,6L), Promise))
-        self.assertEqual(funk(3333333333333L,5555555555555L), 8888888888888L)
+        self.assertTrue(isinstance(funk(5,6), Promise))
+        self.assertEqual(funk(3333333333333,5555555555555), 8888888888888)
 
     def testStrings(self):
         funk = lazy(anton)
@@ -135,9 +136,9 @@ class TestCase100Simple(unittest.TestCase):
     
     def testUnicode(self):
         funk = lazy(anton)
-        self.assertTrue(isinstance(funk(u'anton',u'berta'), Promise))
-        self.assertEqual(unicode(funk('anton', 'berta')), u'antonberta')
-        self.assertEqual(funk(u'anton', u'berta'), u'antonberta')
+        self.assertTrue(isinstance(funk('anton','berta'), Promise))
+        self.assertEqual(unicode(funk('anton', 'berta')), 'antonberta')
+        self.assertEqual(funk('anton', 'berta'), 'antonberta')
     
     def testAttribute(self):
         funk = lazy(anton)

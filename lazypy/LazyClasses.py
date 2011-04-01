@@ -41,8 +41,7 @@ class LazyEvaluatedMetaClass(type):
         for (k, v) in attributes.items():
             if isinstance(v, types.FunctionType):
                 setattr(klass, k, lazy(v, promiseclass))
-        super(LazyEvaluatedMetaClass, klass).__init__(name,
-            bases, attributes)
+        super(LazyEvaluatedMetaClass, klass).__init__(name, bases, attributes)
 
 class LazyEvaluated(object):
 

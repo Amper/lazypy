@@ -25,6 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from Utils import *
+import functools
+import sys
+
+PY2 = sys.version_info[0] < 3
+if not PY2:
+    apply = lambda func, *args, **kwargs: func(*args, **kwargs)
 
 def force(value):
     """
@@ -35,8 +41,10 @@ def force(value):
     """
 
     f = getattr(value, '__force__', None)
-    if f: return f()
-    else: return value
+    if f: 
+    	return f()
+    else: 
+    	return value
 
 class PromiseMetaClass(type):
 
@@ -61,23 +69,42 @@ class PromiseMetaClass(type):
 
     __magicmethods__ = ['__abs__', '__pos__', '__invert__', '__neg__']
     
-    __magicrmethods__ = [('__radd__', '__add__'), ('__rsub__', '__sub__'),
-        ('__rdiv__', '__div__'), ('__rmul__', '__mul__'),
-        ('__rand__', '__and__'), ('__ror__', '__or__'),
-        ('__rxor__', '__xor__'), ('__rlshift__', '__lshift__'),
-        ('__rrshift__', '__rshift__'), ('__rmod__', '__mod__'),
-        ('__rdivmod__', '__divmod__'), ('__rtruediv__', '__truediv__'),
-        ('__rfloordiv__', '__floordiv__'), ('__rpow__', '__pow__')]
+    __magicrmethods__ = [('__radd__', '__add__'), 
+                         ('__rsub__', '__sub__'),
+                         ('__rdiv__', '__div__'), 
+                         ('__rmul__', '__mul__'),
+                         ('__rand__', '__and__'), 
+                         ('__ror__', '__or__'),
+                         ('__rxor__', '__xor__'), 
+                         ('__rlshift__', '__lshift__'),
+                         ('__rrshift__', '__rshift__'), 
+                         ('__rmod__', '__mod__'),
+                         ('__rdivmod__', '__divmod__'), 
+                         ('__rtruediv__', '__truediv__'),
+                         ('__rfloordiv__', '__floordiv__'), 
+                         ('__rpow__', '__pow__')]
     
-    __magicfunctions__ = [('__cmp__', cmp), ('__str__', str),
-        ('__unicode__', unicode), ('__complex__', complex),
-        ('__int__', int), ('__long__', long), ('__float__', float),
-        ('__oct__', oct), ('__hex__', hex), ('__hash__', hash),
-        ('__len__', len), ('__iter__', iter), ('__delattr__', delattr),
-        ('__setitem__', setitem), ('__delitem__', delitem),
-        ('__setslice__', setslice), ('__delslice__', delslice),
-        ('__getitem__', getitem), ('__call__', apply),
-        ('__getslice__', getslice), ('__nonzero__', bool)]
+    __magicfunctions__ = [('__cmp__', lambda a,b: (a > b) - (a < b)), 
+                          ('__str__', str),
+                          ('__unicode__', unicode if PY2 else str), 
+                          ('__complex__', complex),
+                          ('__int__', int), 
+                          ('__long__', long if PY2 else int), 
+                          ('__float__', float),
+                          ('__oct__', oct), 
+                          ('__hex__', hex), 
+                          ('__hash__', hash),
+                          ('__len__', len), 
+                          ('__iter__', iter), 
+                          ('__delattr__', delattr),
+                          ('__setitem__', setitem), 
+                          ('__delitem__', delitem),
+                          ('__setslice__', setslice), 
+                          ('__delslice__', delslice),
+                          ('__getitem__', getitem), 
+                          ('__call__', apply),
+                          ('__getslice__', getslice), 
+                          ('__nonzero__', bool)]
 
     def __init__(klass, name, bases, attributes):
         for k in klass.__magicmethods__:
@@ -91,8 +118,7 @@ class PromiseMetaClass(type):
         for (k, v) in klass.__magicfunctions__:
             if not attributes.has_key(k):
                 setattr(klass, k, klass.__forcedmethodfunc__(v))
-        super(PromiseMetaClass, klass).__init__(name,
-            bases, attributes)
+        super(PromiseMetaClass, klass).__init__(name, bases, attributes)
 
     def __forcedmethodname__(self, method):
         """
@@ -101,6 +127,7 @@ class PromiseMetaClass(type):
         on the first argument. The method to use is passed by name.
         """
 
+        
         def wrapped_method(self, *args):
             result = force(self)
             meth = getattr(result, method)
@@ -144,8 +171,10 @@ class PromiseMetaClass(type):
         """
 
         def wrapped_method(*args):
-            args = [force(arg) for arg in args]
-            return apply(func, args)
+            return apply(func, [force(arg) for arg in args])
+
+        wrapped_method.__name__ = method.__name__
+        wrapped_method.__doc__  = method.__doc__
 
         return wrapped_method
     
@@ -203,5 +232,3 @@ class Promise(object):
                     in self.__kw.items()])
             self.__result = apply(self.__func, args, kw)
         return self.__result
-    
-

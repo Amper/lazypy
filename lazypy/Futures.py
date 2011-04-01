@@ -76,7 +76,7 @@ class Future(object):
                 self.__sync.notify()
                 try:
                     self.__result = apply(func, args, kw)
-                except Exception, e:
+                except Exception as e:
                     self.__exception = e
             finally:
                 self.__sync.release()

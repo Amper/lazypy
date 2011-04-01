@@ -36,8 +36,10 @@ def delay(funk, args=None, kw=None, promiseclass=Promise):
     override the class to be used for the promise.
     """
 
-    if args is None: args = []
-    if kw is None: kw = {}
+    if args is None: 
+    	args = []
+    if kw is None: 
+    	kw = {}
     return promiseclass(funk, args, kw)
 
 def lazy(funk, promiseclass=Promise):
@@ -62,8 +64,10 @@ def spawn(funk, args=None, kw=None, futureclass=Future):
     override the class to be used for the future.
     """
 
-    if args is None: args = []
-    if kw is None: kw = {}
+    if args is None: 
+    	args = []
+    if kw is None: 
+    	kw = {}
     return futureclass(funk, args, kw)
 
 def future(funk, futureclass=Future):
@@ -90,8 +94,10 @@ def fork(funk, args=None, kw=None, futureclass=ForkedFuture):
     by default.
     """
 
-    if args is None: args = []
-    if kw is None: kw = {}
+    if args is None: 
+    	args = []
+    if kw is None: 
+    	kw = {}
     return futureclass(funk, args, kw)
 
 def forked(funk, futureclass=ForkedFuture):
