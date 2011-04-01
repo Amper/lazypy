@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import functools
 import sys
+import operator
 from lazypy.Utils import *
 from lazypy.__py2comp__ import *
 
@@ -81,7 +82,9 @@ class PromiseMetaClass(type):
                          ('__rdivmod__', '__divmod__'), 
                          ('__rtruediv__', '__truediv__'),
                          ('__rfloordiv__', '__floordiv__'), 
-                         ('__rpow__', '__pow__')]
+                         ('__rpow__', '__pow__'),
+                         ('__req__', '__eq__'),
+                        ]
     
     __magicfunctions__ = [('__cmp__', cmp), 
                           ('__str__', str),
@@ -103,7 +106,9 @@ class PromiseMetaClass(type):
                           ('__getitem__', getitem), 
                           ('__call__', apply),
                           ('__getslice__', getslice), 
-                          ('__nonzero__', bool)]
+                          ('__nonzero__', bool),
+                          ('__bool__', bool),
+                         ]
 
     def __init__(klass, name, bases, attributes):
         for k in klass.__magicmethods__:
@@ -229,7 +234,6 @@ class Promise(Promise):
 
         if self.__result is NoneSoFar:
             args = [force(arg) for arg in self.__args]
-            kw = dict([(k, force(v)) for (k, v)
-                    in self.__kw.items()])
+            kw = dict([(k, force(v)) for (k, v) in self.__kw.items()])
             self.__result = self.__func(*args, **kw)
         return self.__result
