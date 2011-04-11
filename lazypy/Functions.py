@@ -37,7 +37,7 @@ __all__ = ["delay",
            "forked",
           ]
 
-def delay(funk, args=None, kw=None, promiseclass=Promise):
+def delay(func, args=None, kw=None, promiseclass=Promise):
 
     """
     This is a lazy variant on the apply function. It returns a promise
@@ -49,9 +49,9 @@ def delay(funk, args=None, kw=None, promiseclass=Promise):
     	args = []
     if kw is None: 
     	kw = {}
-    return promiseclass(funk, args, kw)
+    return promiseclass(func, args, kw)
 
-def lazy(funk, promiseclass=Promise):
+def lazy(func, promiseclass=Promise):
 
     """
     This function returns a lazy variant on the passed in function.
@@ -60,12 +60,13 @@ def lazy(funk, promiseclass=Promise):
     the promise can be overridden.
     """
 
-    def lazy_funk(*args, **kw):
-        return promiseclass(funk, args, kw)
+    def lazy_func(*args, **kw):
+        return promiseclass(func, args, kw)
+    lazy_func.__doc__ = func.__doc__
 
-    return lazy_funk
+    return lazy_func
 
-def spawn(funk, args=None, kw=None, futureclass=Future):
+def spawn(func, args=None, kw=None, futureclass=Future):
 
     """
     This is a parallel variant on the apply function. It returns a future
@@ -77,9 +78,9 @@ def spawn(funk, args=None, kw=None, futureclass=Future):
     	args = []
     if kw is None: 
     	kw = {}
-    return futureclass(funk, args, kw)
+    return futureclass(func, args, kw)
 
-def future(funk, futureclass=Future):
+def future(func, futureclass=Future):
 
     """
     This function returns a future variant on the passed in function.
@@ -89,12 +90,13 @@ def future(funk, futureclass=Future):
     return a new future.
     """
 
-    def future_funk(*args, **kw):
-        return futureclass(funk, args, kw)
+    def future_func(*args, **kw):
+        return futureclass(func, args, kw)
+    lazy_func.__doc__ = func.__doc__
 
-    return future_funk
+    return future_func
 
-def fork(funk, args=None, kw=None, futureclass=ForkedFuture):
+def fork(func, args=None, kw=None, futureclass=ForkedFuture):
 
     """
     This is a parallel variant on the apply function. It returns a future
@@ -107,9 +109,9 @@ def fork(funk, args=None, kw=None, futureclass=ForkedFuture):
     	args = []
     if kw is None: 
     	kw = {}
-    return futureclass(funk, args, kw)
+    return futureclass(func, args, kw)
 
-def forked(funk, futureclass=ForkedFuture):
+def forked(func, futureclass=ForkedFuture):
 
     """
     This function returns a future variant on the passed in function.
@@ -119,8 +121,9 @@ def forked(funk, futureclass=ForkedFuture):
     return a new future. It uses forked futures by default.
     """
 
-    def future_funk(*args, **kw):
-        return futureclass(funk, args, kw)
+    def future_func(*args, **kw):
+        return futureclass(func, args, kw)
+    lazy_func.__doc__ = func.__doc__
 
-    return future_funk
+    return future_func
 

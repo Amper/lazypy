@@ -67,7 +67,7 @@ class ForkedFuture(ForkedFuture):
 
         def thunk():
             try:
-                res = apply(func, args, kw)
+                res = func(*args, **kw)
                 self.__pipe_out.send((True, res))
             except Exception as e:
                 self.__pipe_out.send((False, e))

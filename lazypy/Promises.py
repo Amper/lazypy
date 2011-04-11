@@ -43,10 +43,7 @@ def force(value):
     """
 
     f = getattr(value, '__force__', None)
-    if f: 
-    	return f()
-    else: 
-    	return value
+    return f() if f else value
 
 class PromiseMetaClass(type):
 
@@ -143,7 +140,6 @@ class PromiseMetaClass(type):
         on the first argument. The method to use is passed by name.
         """
 
-        
         def wrapped_method(self, *args, **kwargs):
             result = force(self)
             meth = getattr(result, method)

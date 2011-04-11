@@ -60,16 +60,14 @@ class NoneSoFar(object):
 NoneSoFar = NoneSoFar()
 PY_VER = sys.version_info[0]
 
-getitem = operator.getitem
-setitem = operator.setitem
-delitem = operator.delitem
+getitem,setitem,delitem  = operator.getitem,operator.setitem,operator.delitem
 
 if PY_VER >= 3:
 
-    apply = lambda func, args=[], kwargs={}: func(*args, **kwargs)
+    apply   = lambda func, args=[], kwargs={}: func(*args, **kwargs)
     unicode = str
-    cmp = lambda a,b: (a > b) - (a < b)
-    long = int
+    cmp     = lambda a,b: (a > b) - (a < b)
+    long    = int
 
     def getslice(obj, start, stop):
         """
@@ -97,10 +95,10 @@ if PY_VER >= 3:
 
 else:
 
-	apply = apply
-	unicode = unicode
-	cmp = cmp
-	long = long
-	getslice = operator.getslice
-	setslice = operator.setslice
-	delslice = operator.delslice
+    apply    = apply
+    unicode  = unicode
+    cmp      = cmp
+    long     = long
+    getslice = operator.getslice
+    setslice = operator.setslice
+    delslice = operator.delslice

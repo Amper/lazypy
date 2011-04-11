@@ -80,7 +80,7 @@ class Future(Future):
             try:
                 self.__sync.notify()
                 try:
-                    self.__result = apply(func, args, kw)
+                    self.__result = func(*args, **kw)
                 except Exception as e:
                     self.__exception = e
             finally:
